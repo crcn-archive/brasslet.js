@@ -52,7 +52,10 @@ ectwo = require("ectwo")()
 irons.add("instances", {
   "findOne": "instance"
 }).add("instance", {
-  "shutdown": "instance",
+  "shutdown": {
+    type: "image",
+    
+  },
   "createImage": "image"
 }).add("image", {
   "migrate": "image",
