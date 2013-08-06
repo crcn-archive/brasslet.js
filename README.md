@@ -40,7 +40,37 @@ class Instance
   start: (next) ->
     #start the instanc
     
-    
-    
+
+```
+
+Ironify:
+
+```coffeescript
+irons = require("irons")()
+ectwo = require("ectwo")()
+
+irons.add("instances", {
+  "findOne": "instance"
+}).add("instance", {
+  "shutdown": "instance",
+  "createImage": "image"
+}).add("image", {
+  "migrate": "image",
+  "createInstance": "instance"
+})
+
+irons.wrap(ectwo.instances, "instances")
+
+
+
+
+# shutdown one instance, migrate it to a new region, and start it up again.
+proc = ectwo.
+  instances.
+  findOne({ tags: { type: "mongodb" } }).
+  shutdown().
+  migrate({ region: ectwo.regions.findOne({ name: /us-*/}) }).
+  createInstance().
+  start()
 
 ```
