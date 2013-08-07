@@ -38,7 +38,13 @@ class CallChain extends events.EventEmitter
       @_callstack.push (next) =>
 
         setTimeout (() =>
-          targets = toarray @target
+
+          targets = toarray(@target).filter (target) =>
+            return true unless @_filter
+            @_filter target
+
+          if @_limit
+            targets = targets.slice(0, @_limit)
 
           async.mapSeries targets, ((target, next) =>
 
@@ -60,6 +66,26 @@ class CallChain extends events.EventEmitter
 
 
       callChain
+
+  ###
+  ###
+
+  filter: (value) ->
+    @_filter = value
+    @
+
+  ###
+  ###
+
+  limit: (count) ->
+    @_limit = count
+    @
+
+  ###
+  ###
+
+  one: () ->
+    @limit 1
 
   ###
   ###
