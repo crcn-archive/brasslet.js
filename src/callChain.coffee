@@ -70,14 +70,14 @@ class CallChain extends events.EventEmitter
   ###
   ###
 
-  filter: (value) ->
+  filter: (value) =>
     @_filter = value
     @
 
   ###
   ###
 
-  limit: (count) ->
+  limit: (count) =>
     @_limit = count
     @
 
