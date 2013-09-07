@@ -48,14 +48,14 @@ class CallChain extends events.EventEmitter
 
           async.mapSeries targets, ((target, next) =>
 
-            @_bubble "call", { chain: @, type: @type, method: name, target: target }
+            @_bubble "call", { chain: @, type: @type, method: name, target: target, args: args }
             onCall target
             
             call = options.call or target[name]
 
             call.apply target, args.concat (err, result) =>
               return next(err) if err?
-              @_bubble "result", { chain: @, type: @type, target: target, method: name, data: result }
+              @_bubble "result", { chain: @, type: @type, target: target, method: name, data: result, args: args }
               onResult result
               next null, map.call target, result
           ), (err, newTarget) =>
