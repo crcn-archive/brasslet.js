@@ -82,5 +82,19 @@ describe "fasten", () ->
       next()
 
 
+  it "can call end if there's an error", (next) ->
+    s = fasten().
+    add("sumtin", {
+      sendError: 
+        call: (next) -> next new Error("fail")
+    })
+
+
+    s.wrap("sumtin", {}).sendError().then((err) ->
+      expect(err).not.to.be(undefined)
+      next()
+    )
+
+
 
 

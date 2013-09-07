@@ -29,6 +29,12 @@ class Fasten extends events.EventEmitter
   ###
   ###
 
+  end: (next) ->
+    
+
+  ###
+  ###
+
   then: (next) ->
     @_callstack.push () ->
       next()

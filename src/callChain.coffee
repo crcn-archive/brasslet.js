@@ -19,6 +19,9 @@ class CallChain extends events.EventEmitter
     for methodName of @methods
       @_addMethod methodName, @methods[methodName]
 
+
+
+
   ###
   ###
 
@@ -38,6 +41,9 @@ class CallChain extends events.EventEmitter
       @_callstack.push (next) =>
 
         setTimeout (() =>
+
+          if @__err
+            return next()
 
           targets = toarray(@target).filter (target) =>
             return true unless @_filter
@@ -59,13 +65,20 @@ class CallChain extends events.EventEmitter
               onResult result
               next null, map.call target, result
           ), (err, newTarget) =>
-            return @_error(err) if err
-            callChain.target = flatten newTarget
+
+            callChain.__err = err
+
+            if err
+              @_error(err)
+            else
+              callChain.target = flatten newTarget
+
             next()
         ), 1
 
 
       callChain
+
 
   ###
   ###
@@ -116,7 +129,7 @@ class CallChain extends events.EventEmitter
 
   then: (next) ->
     @_callstack.push () =>
-      next null, @target
+      next @__err, @target
     @
 
 
@@ -124,6 +137,6 @@ class CallChain extends events.EventEmitter
   ###
 
   _error: (err) =>
-    @emit "error", err
+    @__err = err
 
 module.exports = CallChain
