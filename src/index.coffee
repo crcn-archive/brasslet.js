@@ -29,19 +29,6 @@ class Fasten extends events.EventEmitter
   ###
   ###
 
-  end: (next) ->
-    
-
-  ###
-  ###
-
-  then: (next) ->
-    @_callstack.push () ->
-      next()
-
-  ###
-  ###
-
   _fixOps: (ops) ->
     return @_arrayToOps(ops) if type(ops) is "array"
     return ops

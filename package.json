@@ -1,6 +1,6 @@
 {
   "name": "fasten",
-  "version": "0.0.8",
+  "version": "0.0.10",
   "description": "Built originally for [node-ectwo](https://github.com/crcn/node-ectwo)",
   "main": "./lib/index.js",
   "scripts": {

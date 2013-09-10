@@ -129,7 +129,10 @@ class CallChain extends events.EventEmitter
 
   then: (next) ->
     @_callstack.push () =>
-      next @__err, @target
+      try
+        next.call @target, @__err, @target
+      catch e
+        @__err = e
     @
 
 
