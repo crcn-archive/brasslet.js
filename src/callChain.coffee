@@ -19,8 +19,6 @@ class CallChain extends events.EventEmitter
       @_addMethod methodName, @methods[methodName]
 
 
-
-
   ###
   ###
 
@@ -80,6 +78,12 @@ class CallChain extends events.EventEmitter
 
       callChain
 
+  ###
+  ###
+
+  detach: () ->
+    @callstack = flatstack()
+    @
 
   ###
   ###
