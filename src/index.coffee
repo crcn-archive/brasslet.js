@@ -11,7 +11,6 @@ class Fasten extends events.EventEmitter
 
   constructor: () ->
     @_callChainOptions = {}
-    @_callstack = flatstack()
 
   ###
   ###
@@ -23,8 +22,14 @@ class Fasten extends events.EventEmitter
   ### 
   ###
 
-  wrap: (type, target) ->
-    new CallChain({ fasten: @, type: type, target: target, methods: @_callChainOptions[type] })
+  wrap: (type, target, callstack) ->
+    new CallChain({ 
+      fasten: @, 
+      type: type, 
+      target: target, 
+      methods: @_callChainOptions[type],
+      callstack: callstack ? flatstack()
+    })
 
   ###
   ###

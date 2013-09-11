@@ -13,8 +13,7 @@ class CallChain extends events.EventEmitter
   constructor: (options) ->
 
  
-    {@fasten, @target, @methods, @type} = options
-    @_callstack = @fasten._callstack
+    {@fasten, @target, @methods, @type, @callstack} = options
 
     for methodName of @methods
       @_addMethod methodName, @methods[methodName]
@@ -34,11 +33,11 @@ class CallChain extends events.EventEmitter
 
     @[name] = (args...) =>
 
-      callChain = @fasten.wrap(type)
+      callChain = @fasten.wrap(type, undefined, @callstack)
       callChain.parent = @
 
       # shove in a queue
-      @_callstack.push (next) =>
+      @callstack.push (next) =>
 
         setTimeout (() =>
 
@@ -130,7 +129,7 @@ class CallChain extends events.EventEmitter
   ###
 
   then: (next) ->
-    @_callstack.push () =>
+    @callstack.push () =>
       try
         next.call @target, @__err, @target
       catch e
