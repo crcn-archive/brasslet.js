@@ -43,6 +43,7 @@ class CallChain extends events.EventEmitter
         setTimeout (() =>
 
           if @__err
+            callChain.__err = @__err
             return next()
 
           targets = toarray(@target).filter (target) =>
@@ -58,6 +59,7 @@ class CallChain extends events.EventEmitter
             onCall target
             
             call = options.call or target[name]
+
 
             call.apply target, args.concat (err, result) =>
               return next(err) if err?
