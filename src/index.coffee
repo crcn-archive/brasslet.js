@@ -2,6 +2,7 @@ CallChain = require "./callChain"
 flatstack = require "flatstack"
 type      = require "type-component"
 events = require("events")
+_ = require "underscore"
 
 
 class Fasten extends events.EventEmitter
@@ -18,6 +19,20 @@ class Fasten extends events.EventEmitter
   add: (name, options) ->   
     @_callChainOptions[name] = @_fixOps options
     @
+
+  ###
+  ###
+
+  options: () -> @_callChainOptions
+
+  ###
+  ###
+
+  all: (options) ->
+    for key of @_callChainOptions
+      _.extend @_callChainOptions[key], options
+
+
 
   ### 
   ###
