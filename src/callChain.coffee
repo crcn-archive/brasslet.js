@@ -13,7 +13,9 @@ class CallChain extends events.EventEmitter
   constructor: (options) ->
 
  
-    {@fasten, @target, @methods, @type, @callstack} = options
+    {@fasten, @methods, @type, @callstack} = options
+
+    @_target options.target
 
     for methodName of @methods
       @_addMethod methodName, @methods[methodName]
@@ -43,14 +45,7 @@ class CallChain extends events.EventEmitter
             callChain.__err = @__err
             return next()
 
-          targets = toarray(@target).filter (target) =>
-            return true unless @_filter
-            @_filter target
-
-          if @_limit
-            targets = targets.slice(0, @_limit)
-
-          async.mapSeries targets, ((target, next) =>
+          async.mapSeries @target, ((target, next) =>
 
             @_bubble "call", { chain: @, type: @type, method: name, target: target, args: args }
             onCall target
@@ -70,13 +65,28 @@ class CallChain extends events.EventEmitter
             if err
               @_error(err)
             else
-              callChain.target = flatten newTarget
+              callChain._target flatten newTarget
 
             next()
         ), 1
 
 
       callChain
+
+  ###
+  ###
+
+  _target: (target) ->
+
+    targets = toarray(target).filter (target) =>
+      return true unless @_filter
+      @_filter target
+
+    if @_limit
+      targets = targets.slice(0, @_limit)
+
+    @target = targets
+
 
   ###
   ###
