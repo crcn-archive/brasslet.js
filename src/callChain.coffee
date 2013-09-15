@@ -48,7 +48,7 @@ class CallChain extends events.EventEmitter
           async.mapSeries @target, ((target, next) =>
 
             @_bubble "call", { chain: @, type: @type, method: name, target: target, args: args }
-            onCall target
+            onCall.call @, target
             
             call = options.call or target[name]
 
@@ -56,7 +56,7 @@ class CallChain extends events.EventEmitter
             call.apply target, args.concat (err, result) =>
               return next(err) if err?
               @_bubble "result", { chain: @, type: @type, target: target, method: name, data: result, args: args }
-              onResult result
+              onResult.call @, result
               next null, map.call target, result
           ), (err, newTarget) =>
 
