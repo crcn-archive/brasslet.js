@@ -20,6 +20,7 @@ class CallChain extends events.EventEmitter
     for methodName of @methods
       @_addMethod methodName, @methods[methodName]
 
+    @on "error", () ->
 
   ###
   ###
@@ -164,5 +165,6 @@ class CallChain extends events.EventEmitter
 
   _error: (err) =>
     @__err = err
+    @emit "error", err
 
 module.exports = CallChain
