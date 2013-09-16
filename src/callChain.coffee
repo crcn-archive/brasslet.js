@@ -82,10 +82,18 @@ class CallChain extends events.EventEmitter
       return true unless @_filter
       @_filter target
 
-    if @_limit
+    if @_limit?
       targets = targets.slice(0, @_limit)
 
     @target = targets
+
+  ###
+  ###
+
+  count: () ->
+    @then (err, targets) =>
+      @target = [targets.length]
+
 
 
   ###
