@@ -3,6 +3,7 @@ flatstack = require "flatstack"
 type      = require "type-component"
 events = require("events")
 _ = require "underscore"
+bindable = require "bindable"
 
 
 class Fasten extends events.EventEmitter
@@ -11,28 +12,25 @@ class Fasten extends events.EventEmitter
   ###
 
   constructor: () ->
-    @_callChainOptions = {}
+    @_callChainOptions = new bindable.Object()
 
   ###
   ###
 
   add: (name, options) ->   
-    @_callChainOptions[name] = @_fixOps options
+    @_callChainOptions.set(name, options)
     @
 
   ###
   ###
 
-  options: () -> @_callChainOptions
+  options: () -> @_callChainOptions.context()
 
   ###
   ###
 
   all: (options) ->
-    for key of @_callChainOptions
-      _.extend @_callChainOptions[key], options
-
-
+    @_callChainOptions.setProperties(options)
 
   ### 
   ###
@@ -42,25 +40,9 @@ class Fasten extends events.EventEmitter
       fasten: @, 
       type: type, 
       target: target, 
-      methods: @_callChainOptions[type],
+      methods: @_callChainOptions.get(type),
       callstack: callstack ? flatstack()
     })
-
-  ###
-  ###
-
-  _fixOps: (ops) ->
-    return @_arrayToOps(ops) if type(ops) is "array"
-    return ops
-
-  ###
-  ###
-
-  _arrayToOps: (ops) ->
-    newOps = {}
-    for opName in ops
-      newOps[opName] = () -> @
-    newOps
 
 
 module.exports = () -> new Fasten()

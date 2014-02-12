@@ -1,6 +1,6 @@
 {
   "name": "brasslet",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "Built originally for [node-ectwo](https://github.com/crcn/node-ectwo)",
   "main": "./lib/index.js",
   "scripts": {
@@ -29,6 +29,7 @@
     "type-component": "0.0.1",
     "flatten": "0.0.x",
     "tq": "0.2.x",
-    "underscore": "~1.5.2"
+    "underscore": "~1.5.2",
+    "bindable": "~0.5.26"
   }
 }
