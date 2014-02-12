@@ -30,7 +30,12 @@ class Fasten extends events.EventEmitter
   ###
 
   all: (options) ->
-    @_callChainOptions.setProperties(options)
+
+    ctx = @_callChainOptions.context()
+
+    for key of ctx
+      for key2 of options
+        @_callChainOptions.set(key + "." + key2, options[key2])
 
   ### 
   ###
