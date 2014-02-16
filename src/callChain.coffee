@@ -12,6 +12,8 @@ class CallChain extends events.EventEmitter
 
   constructor: (options) ->
 
+    @_delay = -1
+
  
     {@fasten, @methods, @type, @callstack} = options
 
@@ -46,7 +48,9 @@ class CallChain extends events.EventEmitter
             callChain.__err = @__err
             return next()
 
-          async.mapSeries @target, ((target, next) =>
+          fn = if @_parallel then async.map else async.mapSeries
+
+          fn.call async, @target, ((target, next) =>
 
             @_bubble "call", { chain: @, type: @type, method: name, target: target, args: args }
             onCall.call @, target
@@ -58,7 +62,14 @@ class CallChain extends events.EventEmitter
               return next(err) if err?
               @_bubble "result", { chain: @, type: @type, target: target, method: name, data: result, args: args }
               onResult.call @, result
-              next null, map.call target, result
+
+              v = map.call target, result
+
+              if ~@_delay
+                setTimeout(next, @_delay, null, v)
+              else
+                next null, v
+
           ), (err, newTarget) =>
 
             callChain.__err = err
@@ -95,7 +106,26 @@ class CallChain extends events.EventEmitter
     @then (err, targets) =>
       @target = [targets.length]
 
+  ###
+  ###
 
+  series: () ->
+    @_parallel = false
+    @
+
+  ###
+  ###
+
+  parallel: () ->
+    @_parallel = true
+    @
+
+  ###
+  ###
+
+  delay: (value) ->
+    @_delay = value
+    @
 
   ###
   ###
